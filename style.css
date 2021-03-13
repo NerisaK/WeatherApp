@@ -35,14 +35,14 @@ html {
     grid-template-columns: 33.33% 33.33% 33.33%;
 }
 
-#dateTime {
+#day {
     grid-column: 1;
     grid-row: 1;
     align-self: flex-end;
     text-align: left;
     margin: 2em 4em;    
 }
-#time {font-size: 3em; font-weight: 500;}
+#weekday {font-size: 2.5em; font-weight: 500;}
 #date{font-size: 2em;}
 
 #currentCity {
@@ -53,7 +53,7 @@ html {
     margin: 2em 4em;    
 }
 
-#cityName {font-size: 2.5em; font-weight: 500;}
+#cityName {font-size: 3em; font-weight: 500;}
 #countryName {font-size: 1.5em;}
 
 #weatherRow {
@@ -69,8 +69,8 @@ html {
     color: hsl(210, 2%, 90%);
 }
 
-.day {text-align: center; font-weight: 500;}
-.day span {display: block;}
+.day, .today {text-align: center; font-weight: 500;}
+.day span, .today span {display: block;}
 .today .weatherImg {float: left;}
 
 .dayName {
