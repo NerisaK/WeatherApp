@@ -42,6 +42,7 @@ html {
     text-align: center;
     margin: 2rem 4rem;    
 }
+
 #weekday {font-size: 2rem; font-weight: 500;}
 #date{font-size: 1.5rem;}
 
@@ -122,6 +123,8 @@ footer {
         text-align: right;   
     }
     
+    #weekday {font-size: 2.5rem;}
+    #date{font-size: 2rem;}
     #cityName {font-size: 2.5rem;}
     #countryName {font-size: 1.2rem;}
       
@@ -130,7 +133,7 @@ footer {
         grid-row: 2;       
     }
 
-    .today .weatherImg {float: none; width: 5rem; height: 5em;}
+    .today .weatherImg {float: left; width: 5rem; height: 5rem;}
     .today {flex-grow: 0.05;}
 
     footer {font-weight: 300; color: hsl(53, 30%, 95%);}
@@ -157,6 +160,9 @@ footer {
         grid-column: 3;
         grid-row: 1;   
     }
+
+    #cityName {font-size: 2.8rem;}
+    #countryName {font-size: 1.8rem;}
         
     #weatherRow {
         grid-column: 1/4;
@@ -166,5 +172,6 @@ footer {
         justify-content: space-evenly;        
     }
 
+    .today .weatherImg {width: 6rem; height: 6rem;}
     .today {flex-grow: 0.15;}
 }
