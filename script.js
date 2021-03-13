@@ -1,25 +1,9 @@
 // Weather API https://openweathermap.org/api
 // Key: 64b24d6f700e91128f18e56fa42c624c
 //**********************************************
-// Weather icons: 
-//**********************************************
-// Create sunny and cloudy icons:
-//**********************************************
-// let img = document.createElement("div");
-// img.className = "weatherImg sunny/cloudy";
-// day.appendChild(img);
-//**********************************************
-//Create partly_cloudy, rainy and thundery:
-//**********************************************
-// let img = document.createElement("div");
-// img.className = "weatherImg partly_cloudy/rainy/thundery";
-// let div1 = document.createElement("div");
-// div1.className = "partly_cloudy__sun/rainy__cloud/thundery__cloud"
-// let div2 = document.createElement("div");
-// div2.className = "partly_cloudy__cloud/rainy__rain/thundery__rain"
-// img.appendChild(div1);
-// img.appendChild(div2);
-// day.appendchild(img);
+// Weather icons:
+// possible goodWeather = sunny OR cloudy
+// possible badWeather = rainy OR thundery
 
 
 const today = document.querySelector(".today");
@@ -127,6 +111,44 @@ async function getWeather() {
 
 
 // *** Setting the weather and temperature *** //
+
+//function goodWeather(sunny) {
+//    let img = document.createElement("div");
+//    img.className = "weatherImg " + sunny;
+//    return img;
+//};
+//
+//function badWeather (rainy) {
+//    let img = document.createElement("div");
+//    let div1 = document.createElement("div");
+//    let div2 = document.createElement("div");    
+//    img.className = "weatherImg " + rainy;
+//    
+//    if (rainy === "thundery") {
+//        div1.className = `weatherImg thundery__cloud`;
+//        div2.className = `weatherImg thundery__rain`;
+//    }
+//    else {
+//        div1.className = `weatherImg rainy__cloud`;
+//        div2.className = `weatherImg rainy__rain`;
+//    }
+//    img.appendChild(div1);
+//    img.appendChild(div2);
+//    return img;
+//};
+//
+//function whichWeather(weatherStr, day) {
+//    let str = weatherStr;
+//    switch (str) {
+//        case "Thunderstorm": img = badWeather("thundery"); break;
+//        case "Drizzle": img = badWeather("rainy"); break;
+//        case "Rain": img = badWeather("rainy"); break;
+//        case "Snow": img = badWeather("rainy"); break;
+//        case "Clear": img = goodWeather("sunny"); break;
+//        default: img = goodWeather("cloudy"); break;
+//    }
+//    day.appendChild(img);    
+//};
 
 
 // Show temperature and weather for next week in chosen city
