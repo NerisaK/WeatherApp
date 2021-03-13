@@ -1,13 +1,16 @@
 // Weather API https://openweathermap.org/api
-//******************
-// Weather icons:
-//******************
+// Key: 64b24d6f700e91128f18e56fa42c624c
+//**********************************************
+// Weather icons: 
+//**********************************************
 // Create sunny and cloudy icons:
+//**********************************************
 // let img = document.createElement("div");
 // img.className = "weatherImg sunny/cloudy";
 // day.appendChild(img);
-//****************************************
+//**********************************************
 //Create partly_cloudy, rainy and thundery:
+//**********************************************
 // let img = document.createElement("div");
 // img.className = "weatherImg partly_cloudy/rainy/thundery";
 // let div1 = document.createElement("div");
@@ -23,7 +26,10 @@ const today = document.querySelector(".today");
 const days = document.querySelectorAll(".day");
 const daySpan = document.querySelector("#weekday");
 const dateSpan = document.querySelector("#date");
+const tempArr = [];
+const weatherArr = [];
 let date;
+
 
 
 // Figures out which day of the week is now (or will be, depending on the value passed)
@@ -74,30 +80,90 @@ function nextDays() {
 nextDays();
 
 
-// Shows temperature - with a default value for now
-function setWeather() {
-    // Set weather for today
-    let name = document.createElement("span");
-    name.innerHTML = "Today";
-    name.className = "dayName";
-    let temp = document.createElement("span");
-    temp.className = "dayTemp";
-    temp.innerText = "10°";
+
+// **** Getting data from a Weather API **** //
+
+const apiID = "&appid=64b24d6f700e91128f18e56fa42c624c";
+const apiSearch = "https://api.openweathermap.org/data/2.5/weather?q=";
+// City is set to Prague at the moment, but the user will be able to choose another city
+let cityName = "Prague".toLowerCase();
+let stateCode = "CZ".toLowerCase();
+let findCity = apiSearch + cityName + "," + stateCode + apiID;
+
+const apiWeek = "https://api.openweathermap.org/data/2.5/onecall?";
+const apiWeekExclude = "&exclude=current,minutely,hourly,alerts&units=metric";
+let address;
+
+// Func. searches for provided city, gets its coordinates
+// and returns an API address using them
+async function getCityCoordinates() {
+    await fetch(findCity)
+        .then(response => response.json())
+        .then(function(json) {
+        let latNum = json.coord.lat;
+        let lonNum = json.coord.lon;
+        let apiLat = "lat=" + latNum;
+        let apiLon = "&lon=" + lonNum;
+        let fullAPI = apiWeek + apiLat + apiLon + apiWeekExclude + apiID;       
+        address = fullAPI;
+        })
+        .catch(err => {console.log('Request Failed', err)})
+};
+
+// Gets temp and weather of provided city for next days, using the address from previous function, and saves those data to arrays
+async function getWeather() {
+    await getCityCoordinates();
+    await fetch(address)
+        .then (response => response.json())
+        .then(function(json) {
+            for (let i = 0; i < 8; i++) {
+                tempArr[i] = json.daily[i].temp.day.toFixed();
+                weatherArr[i] = json.daily[i].weather[0].main;
+            }
+        })
+        .catch(err => {console.log('Request Failed', err)})
+};
+
+
+
+// *** Setting the weather and temperature *** //
+
+
+// Show temperature and weather for next week in chosen city
+async function setWeather() {
+    await getWeather();
+    // *** Weather for today: *** //
+    // Create elements
+    let dayName = document.createElement("span");
+    let tempSpan = document.createElement("span");
     let img = document.createElement("div");
-    img.className = "weatherImg cloudy";        
+    // Get weather and temperature from json file
+    let todayTemp = tempArr[0];
+    let todayWeather = weatherArr[0];
+    // Set classes and texts
+    dayName.innerHTML = "Today";
+    dayName.className = "dayName";
+    tempSpan.className = "dayTemp";
+    tempSpan.innerText = `${todayTemp}°`;
+    img.className = "weatherImg cloudy";
+    //Append
     today.appendChild(img);
-    today.appendChild(name);
+    today.appendChild(dayName);
     today.appendChild(document.createElement("br"));        
-    today.appendChild(temp);
-    // Set weather for next days
+    today.appendChild(tempSpan);
+    // *** Weather for next days: *** //
+    let i = 1
     for (day of days) {        
-        let temp = document.createElement("span");
-        temp.className = "dayTemp";
-        temp.innerText = "10°";
-        let img = document.createElement("div");
+        let tempSpan = document.createElement("span");
+        let img = document.createElement("div");             
+        tempSpan.className = "dayTemp";
+        let temp = tempArr[i];
+        let weather = weatherArr[i];
+        tempSpan.innerText = `${temp}°`;
         img.className = "weatherImg sunny";
         day.appendChild(img);        
-        day.appendChild(temp);
+        day.appendChild(tempSpan);
+        i++
     }
 };
 
