@@ -1,15 +1,22 @@
 // Weather API https://openweathermap.org/api
 // Key: 64b24d6f700e91128f18e56fa42c624c
 //**********************************************
+// Possible Weather Conditions:
+// Thunderstorm, Drizzle, Rain, Snow, Clear, Clouds, & others like mist
+//**********************************************
 // Weather icons:
-// possible goodWeather = sunny OR cloudy
-// possible badWeather = rainy OR thundery
+// Snow: <i class="fas fa-snowflake"></i>
+// Rain OR Drizzle: <i class="fas fa-cloud-showers-heavy"></i>
+// Clear: <i class="fas fa-sun"></i>
+// Clouds: <i class="fas fa-cloud"></i>
+// Thunderstorm: <i class="fas fa-bolt"></i>
+// Others (Mist): <i class="fas fa-smog"></i>
 
 
-const today = document.querySelector(".today .dayName");
 const dayNames = document.querySelectorAll(".day .dayName");
 const dayTemps = document.querySelectorAll(".dayTemp");
 const daysWeather = document.querySelectorAll(".day .weather");
+const icons = document.querySelectorAll("#weatherRow i");
 const daySpan = document.querySelector("#weekday");
 const dateSpan = document.querySelector("#date");
 const tempArr = [];
@@ -113,16 +120,23 @@ async function getWeather() {
 
 // *** Setting the weather and temperature *** //
 
-
-// Possible Weather Conditions: Thunderstorm, Drizzle, Rain, Snow, Clear, Clouds
-// + else like mist, tornado, ...
+function whichWeather(arritem){
+    let text;
+    switch (arritem) {
+    case "Snow": text = "fa-snowflake"; break;
+    case "Rain": ;
+    case "Drizzle": text = "fa-cloud-showers-heavy"; break;
+    case "Clear": text = "fa-sun"; break;
+    case "Clouds": text = "fa-cloud"; break;
+    case "Thunderstorm": text = "fa-bolt"; break;    
+    default: text = "fa-smog";
+    }
+    return text;
+};
 
 // Show temperature and weather for next week in chosen city
 async function setWeather() {
-    await getWeather();       
-    let todayIMG = document.createElement("div");
-    todayIMG.className = "weatherImg cloudy";
-    today.after(todayIMG);
+    await getWeather(); 
     // Use weather and temperature from json file
     let i = 0
     for (day of dayTemps) {        
@@ -130,19 +144,22 @@ async function setWeather() {
         day.innerText = `${temp}°`;
         i++
     }
-    
+
     let currentWeather = document.querySelector(".today .weather");
     currentWeather.innerText = weatherDescArr[0];
+
     let j = 1;
-    
     for (weather of daysWeather) {
-    let img = document.createElement("div");
-    img.className = "weatherImg sunny";
     weather.innerText = weatherDescArr[j];
-    weather.after(img);
     j++
     }
     
+    let k = 0;
+    for (icon of icons) {
+        let iconClass = whichWeather(weatherArr[k]);
+        icon.classList = `fas ${iconClass}`;
+        k++
+    }
 };
 
 setWeather();

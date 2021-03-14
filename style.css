@@ -70,11 +70,10 @@ html {
 }
 
 .today .weatherImg {
-    width: 6rem;
-    height: 6em;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 1.5em;
+    margin-top: 1.5rem;
+    font-size: 60px;
 }
 
 .today .dayName {width: min-content; padding-left: 1em; padding-right: 1em;}
@@ -83,8 +82,7 @@ html {
 
 .day, .today {text-align: center; font-weight: 500;}
 .day {display: flex; flex-direction: column; justify-items: center;}
-.dayTemp {font-size: 1.5em; margin-top: 1em;}
-.dayName {align-self: flex-start;}
+.dayTemp {font-size: 1.5em; margin-top: 0.5em;}
 
 .weather {
     max-width: 80px;
@@ -116,10 +114,17 @@ footer {
 }
 
 .weatherImg {
-	width: 4rem;
-	height: 4rem;
 	margin-top: auto;
+    font-size: 45px;
 }
+
+/* Icon colors */
+
+.fa-snowflake {color:hsl(213, 24%, 95%);}
+.fa-cloud-showers-heavy {color: hsl(213, 24%, 70%);}
+.fa-sun {color: hsl(46, 61%, 57%);}
+.fa-cloud, .fa-smog {color: hsl(213, 5%, 70%);}
+.fa-bolt {color: hsl(60, 48%, 68%);}
 
 @media (min-width: 650px) {
 
@@ -153,10 +158,13 @@ footer {
         padding-top: 1rem;       
     }
 
-    .today .weatherImg {width: 5rem; height: 5rem;}
     .today {flex-grow: 0.05; text-align: center;}
     .dayTemp {font-size: 1.5em;}
     .weather {font-size: 1em;}
+
+    .weatherImg {
+        font-size: 50px;
+    }
 
     footer {font-weight: 300; color: hsl(53, 30%, 95%);}
     footer a {color: hsl(53, 30%, 85%); font-weight: 500;}
@@ -195,7 +203,11 @@ footer {
     }
     
     .dayTemp {font-size: 2rem;}
-    .today .weatherImg {width: 6rem; height: 6rem;}
     .today {flex-grow: 0.15;}
     .weather {font-size: 1.2em;}
+    .today .weatherImg {font-size: 80px;}
+
+    .weatherImg {
+        font-size: 60px;
+    }
 }
