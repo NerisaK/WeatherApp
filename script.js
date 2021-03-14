@@ -26,7 +26,7 @@ function whichDay(dayNum){
     case 4: text = "Thursday"; break;
     case 5: text = "Friday"; break;
     case 6: text = "Saturday"; break;
-    case 7: text = "Sunday"; break;
+    case 0: text = "Sunday"; break;
     default: console.log("Invalid day number!");
     }
     return text;
