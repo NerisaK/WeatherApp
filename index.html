@@ -14,7 +14,17 @@
     <div id="overlay"></div>
     <div id="container">
         <p id="day"><span id="weekday"></span><br><span id="date"></span></p>        
-        <p id="currentCity"><span id="cityName">Prague</span><br><span id="countryName">Czech Republic</span></p>
+        <p id="currentCity">
+            <span id="cityName">Prague</span>
+            <i id="dropIcon" class="far fa-caret-square-down"></i><br>
+            <span id="countryName">Czech Republic</span></p>
+            <div id="searchform" class="hide">
+                <label for="cityS">City name:</label>
+                <input type="text" id="cityS" name="city" value="Prague"><br>
+                <label for="countryS">Country code:</label>
+                <input type="text" id="countryS" name="code" value="CZ"><br>
+                <button id="searchbtn">Change City</button>
+            </div>
         <section id="weatherRow">
             <div class="today">
                 <span class="dayName">Today</span>

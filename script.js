@@ -19,11 +19,15 @@ const daysWeather = document.querySelectorAll(".day .weather");
 const icons = document.querySelectorAll("#weatherRow i");
 const daySpan = document.querySelector("#weekday");
 const dateSpan = document.querySelector("#date");
+const dropIcon = document.querySelector("#dropIcon");
+const searchForm = document.querySelector("#searchform");
+const searchCity = document.querySelector("#cityS");
+const searchCountry = document.querySelector("#countryS");
+const searchButton = document.querySelector("#searchbtn");
 const tempArr = [];
 const weatherArr = [];
 const weatherDescArr = [];
 let date;
-
 
 
 // Figures out which day of the week is now (or will be, depending on the value passed)
@@ -106,7 +110,7 @@ async function getWeather() {
     await getCityCoordinates();
     await fetch(address)
         .then (response => response.json())
-        .then(function(json) {console.log(json);
+        .then(function(json) {
             for (let i = 0; i < 8; i++) {
                 tempArr[i] = json.daily[i].temp.day.toFixed();
                 weatherArr[i] = json.daily[i].weather[0].main;
@@ -163,3 +167,23 @@ async function setWeather() {
 };
 
 setWeather();
+
+// *** Choosing another city ***
+
+// Show or hide search on click
+dropIcon.addEventListener("click", () => {
+    if (!dropIcon.classList.contains("clicked")){
+    searchForm.classList.remove("hide");
+    dropIcon.classList.remove("fa-caret-square-down");
+    dropIcon.classList.add("fa-caret-square-up", "clicked");}
+    else {
+    searchForm.classList.add("hide");
+    dropIcon.classList.remove("fa-caret-square-up", "clicked");
+    dropIcon.classList.add("fa-caret-square-down");
+    }
+});
+
+// searchForm
+// searchCity
+// searchCountry
+// searchButton
