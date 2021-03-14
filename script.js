@@ -6,12 +6,15 @@
 // possible badWeather = rainy OR thundery
 
 
-const today = document.querySelector(".today");
-const days = document.querySelectorAll(".day");
+const today = document.querySelector(".today .dayName");
+const dayNames = document.querySelectorAll(".day .dayName");
+const dayTemps = document.querySelectorAll(".dayTemp");
+const daysWeather = document.querySelectorAll(".day .weather");
 const daySpan = document.querySelector("#weekday");
 const dateSpan = document.querySelector("#date");
 const tempArr = [];
 const weatherArr = [];
+const weatherDescArr = [];
 let date;
 
 
@@ -50,14 +53,11 @@ setDate();
 // Sets the names of coming days according to what day is today
 function nextDays() {
     let i = date.getDay();
-    for (day of days) {
+    for (day of dayNames) {
         if (i<7){i++;}
         else {i = 1;}        
-        let dayWeekName = whichDay(i).slice(0, 3); //Shortened to 3 chars (e.g. Mon)
-        let name = document.createElement("span");
-        name.className = "dayName";
-        name.innerText = dayWeekName;
-        day.appendChild(name);  
+        let dayWeekName = whichDay(i).slice(0, 3); //Shortened to 3 chars (e.g. Mon)        
+        day.innerText = dayWeekName;        
     }
 };
 
@@ -99,10 +99,11 @@ async function getWeather() {
     await getCityCoordinates();
     await fetch(address)
         .then (response => response.json())
-        .then(function(json) {
+        .then(function(json) {console.log(json);
             for (let i = 0; i < 8; i++) {
                 tempArr[i] = json.daily[i].temp.day.toFixed();
                 weatherArr[i] = json.daily[i].weather[0].main;
+                weatherDescArr[i] = json.daily[i].weather[0].description;
             }
         })
         .catch(err => {console.log('Request Failed', err)})
@@ -112,81 +113,36 @@ async function getWeather() {
 
 // *** Setting the weather and temperature *** //
 
-//function goodWeather(sunny) {
-//    let img = document.createElement("div");
-//    img.className = "weatherImg " + sunny;
-//    return img;
-//};
-//
-//function badWeather (rainy) {
-//    let img = document.createElement("div");
-//    let div1 = document.createElement("div");
-//    let div2 = document.createElement("div");    
-//    img.className = "weatherImg " + rainy;
-//    
-//    if (rainy === "thundery") {
-//        div1.className = `weatherImg thundery__cloud`;
-//        div2.className = `weatherImg thundery__rain`;
-//    }
-//    else {
-//        div1.className = `weatherImg rainy__cloud`;
-//        div2.className = `weatherImg rainy__rain`;
-//    }
-//    img.appendChild(div1);
-//    img.appendChild(div2);
-//    return img;
-//};
-//
-//function whichWeather(weatherStr, day) {
-//    let str = weatherStr;
-//    switch (str) {
-//        case "Thunderstorm": img = badWeather("thundery"); break;
-//        case "Drizzle": img = badWeather("rainy"); break;
-//        case "Rain": img = badWeather("rainy"); break;
-//        case "Snow": img = badWeather("rainy"); break;
-//        case "Clear": img = goodWeather("sunny"); break;
-//        default: img = goodWeather("cloudy"); break;
-//    }
-//    day.appendChild(img);    
-//};
 
+// Possible Weather Conditions: Thunderstorm, Drizzle, Rain, Snow, Clear, Clouds
+// + else like mist, tornado, ...
 
 // Show temperature and weather for next week in chosen city
 async function setWeather() {
-    await getWeather();
-    // *** Weather for today: *** //
-    // Create elements
-    let dayName = document.createElement("span");
-    let tempSpan = document.createElement("span");
-    let img = document.createElement("div");
-    // Get weather and temperature from json file
-    let todayTemp = tempArr[0];
-    let todayWeather = weatherArr[0];
-    // Set classes and texts
-    dayName.innerHTML = "Today";
-    dayName.className = "dayName";
-    tempSpan.className = "dayTemp";
-    tempSpan.innerText = `${todayTemp}°`;
-    img.className = "weatherImg cloudy";
-    //Append
-    today.appendChild(img);
-    today.appendChild(dayName);
-    today.appendChild(document.createElement("br"));        
-    today.appendChild(tempSpan);
-    // *** Weather for next days: *** //
-    let i = 1
-    for (day of days) {        
-        let tempSpan = document.createElement("span");
-        let img = document.createElement("div");             
-        tempSpan.className = "dayTemp";
+    await getWeather();       
+    let todayIMG = document.createElement("div");
+    todayIMG.className = "weatherImg cloudy";
+    today.after(todayIMG);
+    // Use weather and temperature from json file
+    let i = 0
+    for (day of dayTemps) {        
         let temp = tempArr[i];
-        let weather = weatherArr[i];
-        tempSpan.innerText = `${temp}°`;
-        img.className = "weatherImg sunny";
-        day.appendChild(img);        
-        day.appendChild(tempSpan);
+        day.innerText = `${temp}°`;
         i++
     }
+    
+    let currentWeather = document.querySelector(".today .weather");
+    currentWeather.innerText = weatherDescArr[0];
+    let j = 1;
+    
+    for (weather of daysWeather) {
+    let img = document.createElement("div");
+    img.className = "weatherImg sunny";
+    weather.innerText = weatherDescArr[j];
+    weather.after(img);
+    j++
+    }
+    
 };
 
 setWeather();
