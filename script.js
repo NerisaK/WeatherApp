@@ -65,15 +65,12 @@ function nextDays() {
     try{
     let i = date.getDay();
     for (day of dayNames) {
-        if (i<7){i++;}
-        else {i = 1;}              
+        if (i<6){i++;}
+        else {i = 0;}              
         let dayWeekName = whichDay(i).slice(0, 3); //Shortened to 3 chars (e.g. Mon)        
         day.innerText = dayWeekName;        
     }}
-    catch {
-        let dayWeekName = whichDay(0).slice(0, 3); //Quick fix for Sunday (for now)
-        day.innerText = dayWeekName;
-    }
+    catch {e => console.error(e);}
 };
 
 nextDays();
