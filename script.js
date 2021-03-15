@@ -23,7 +23,6 @@ const dropIcon = document.querySelector("#dropIcon");
 const searchForm = document.querySelector("#searchform");
 const searchCity = document.querySelector("#cityS");
 const searchCountry = document.querySelector("#countryS");
-const searchButton = document.querySelector("#searchbtn");
 const tempArr = [];
 const weatherArr = [];
 const weatherDescArr = [];
@@ -63,12 +62,17 @@ setDate();
 
 // Sets the names of coming days according to what day is today
 function nextDays() {
+    try{
     let i = date.getDay();
     for (day of dayNames) {
         if (i<7){i++;}
-        else {i = 1;}        
+        else {i = 1;}              
         let dayWeekName = whichDay(i).slice(0, 3); //Shortened to 3 chars (e.g. Mon)        
         day.innerText = dayWeekName;        
+    }}
+    catch {
+        let dayWeekName = whichDay(0).slice(0, 3); //Quick fix for Sunday (for now)
+        day.innerText = dayWeekName;
     }
 };
 
@@ -140,6 +144,7 @@ function whichWeather(arritem){
 
 // Show temperature and weather for next week in chosen city
 async function setWeather() {
+    try {
     await getWeather(); 
     // Use weather and temperature from json file
     let i = 0
@@ -163,27 +168,35 @@ async function setWeather() {
         let iconClass = whichWeather(weatherArr[k]);
         icon.classList = `fas ${iconClass}`;
         k++
-    }
+    }}
+    catch {e => console.error(e);}
 };
 
 setWeather();
 
 // *** Choosing another city ***
 
-// Show or hide search on click
-dropIcon.addEventListener("click", () => {
-    if (!dropIcon.classList.contains("clicked")){
-    searchForm.classList.remove("hide");
-    dropIcon.classList.remove("fa-caret-square-down");
-    dropIcon.classList.add("fa-caret-square-up", "clicked");}
-    else {
-    searchForm.classList.add("hide");
-    dropIcon.classList.remove("fa-caret-square-up", "clicked");
-    dropIcon.classList.add("fa-caret-square-down");
-    }
-});
-
-// searchForm
-// searchCity
-// searchCountry
-// searchButton
+//function hideForm() {
+//    searchForm.classList.add("hide");
+//    dropIcon.classList.remove("fa-caret-square-up", "clicked");
+//    dropIcon.classList.add("fa-caret-square-down");
+//};
+//
+//// Show or hide search on click
+//dropIcon.addEventListener("click", () => {
+//    if (!dropIcon.classList.contains("clicked")){
+//    searchForm.classList.remove("hide");
+//    dropIcon.classList.remove("fa-caret-square-down");
+//    dropIcon.classList.add("fa-caret-square-up", "clicked");}
+//    else {hideForm();}
+//});
+//
+//// searchForm
+//// searchCity
+//// searchCountry
+//
+//searchForm.addEventListener("submit", (e) => {
+//    e.preventDefault();    
+//    console.log("submited!");
+//    hideForm();
+//})
