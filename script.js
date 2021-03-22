@@ -19,6 +19,8 @@ const daysWeather = document.querySelectorAll(".day .weather");
 const icons = document.querySelectorAll("#weatherRow i");
 const daySpan = document.querySelector("#weekday");
 const dateSpan = document.querySelector("#date");
+const citySpan = document.querySelector("#cityName");
+const countrySpan = document.querySelector("#countryName");
 const dropIcon = document.querySelector("#dropIcon");
 const searchForm = document.querySelector("#searchform");
 const searchCity = document.querySelector("#cityS");
@@ -27,6 +29,12 @@ const tempArr = [];
 const weatherArr = [];
 const weatherDescArr = [];
 let date;
+let newCity = "Prague";
+let newCountry = "CZ";
+let currentCity = "Prague";
+let currentCountry = "Czechia";
+let utcOffset = 3600;
+
 
 
 // Figures out which day of the week is now (or will be, depending on the value passed)
@@ -49,10 +57,10 @@ function whichDay(dayNum){
 // Shows current date
 function setDate() {
     date = new Date();
-    let dayWeek = date.getDay();    
+    let dayWeek = date.getUTCDay();    
     let dayWeekName = whichDay(dayWeek);    
     let dayStr = dayWeekName;
-    let dateStr = date.toLocaleDateString();
+    let dateStr = `${date.getUTCFullYear()}-${date.getUTCMonth()+1}-${date.getUTCDate()}`
     daySpan.innerHTML = dayStr;
     dateSpan.innerHTML = dateStr;
 };
@@ -81,26 +89,36 @@ nextDays();
 
 const apiID = "&appid=64b24d6f700e91128f18e56fa42c624c";
 const apiSearch = "https://api.openweathermap.org/data/2.5/weather?q=";
-// City is set to Prague at the moment, but the user will be able to choose another city
-let cityName = "Prague".toLowerCase();
-let stateCode = "CZ".toLowerCase();
-let findCity = apiSearch + cityName + "," + stateCode + apiID;
-
 const apiWeek = "https://api.openweathermap.org/data/2.5/onecall?";
 const apiWeekExclude = "&exclude=current,minutely,hourly,alerts&units=metric";
+
+function setAddress() {    
+    let cityName = newCity.toLowerCase();
+    let stateCode = newCountry.toLowerCase();
+    let findCity = apiSearch + cityName + "," + stateCode + apiID;
+    return findCity;
+};
+
+
+// City is set to Prague at the moment, but the user will be able to choose another city
+
+
 let address;
 
 // Func. searches for provided city, gets its coordinates
 // and returns an API address using them
 async function getCityCoordinates() {
-    await fetch(findCity)
+    await fetch(setAddress())
         .then(response => response.json())
         .then(function(json) {
         let latNum = json.coord.lat;
         let lonNum = json.coord.lon;
         let apiLat = "lat=" + latNum;
         let apiLon = "&lon=" + lonNum;
-        let fullAPI = apiWeek + apiLat + apiLon + apiWeekExclude + apiID;       
+        let fullAPI = apiWeek + apiLat + apiLon + apiWeekExclude + apiID;
+        currentCity = json.name;
+        currentCountry = json.sys.country;
+        utcOffset = json.timezone; 
         address = fullAPI;
         })
         .catch(err => {console.log('Request Failed', err)})
@@ -111,7 +129,7 @@ async function getWeather() {
     await getCityCoordinates();
     await fetch(address)
         .then (response => response.json())
-        .then(function(json) {
+        .then(function(json) {                        
             for (let i = 0; i < 8; i++) {
                 tempArr[i] = json.daily[i].temp.day.toFixed();
                 weatherArr[i] = json.daily[i].weather[0].main;
@@ -165,35 +183,48 @@ async function setWeather() {
         let iconClass = whichWeather(weatherArr[k]);
         icon.classList = `fas ${iconClass}`;
         k++
-    }}
-    catch {e => console.error(e);}
+    }
+}
+catch {e => console.error(e);}
 };
 
 setWeather();
+setCityCountry();
 
 // *** Choosing another city ***
 
-//function hideForm() {
-//    searchForm.classList.add("hide");
-//    dropIcon.classList.remove("fa-caret-square-up", "clicked");
-//    dropIcon.classList.add("fa-caret-square-down");
-//};
-//
-//// Show or hide search on click
-//dropIcon.addEventListener("click", () => {
-//    if (!dropIcon.classList.contains("clicked")){
-//    searchForm.classList.remove("hide");
-//    dropIcon.classList.remove("fa-caret-square-down");
-//    dropIcon.classList.add("fa-caret-square-up", "clicked");}
-//    else {hideForm();}
-//});
-//
-//// searchForm
-//// searchCity
-//// searchCountry
-//
-//searchForm.addEventListener("submit", (e) => {
-//    e.preventDefault();    
-//    console.log("submited!");
-//    hideForm();
-//})
+function hideForm() {
+    searchForm.classList.add("hide");
+    dropIcon.classList.remove("fa-caret-square-up", "clicked");
+    dropIcon.classList.add("fa-caret-square-down");
+};
+
+// Show or hide search on click
+dropIcon.addEventListener("click", () => {
+    if (!dropIcon.classList.contains("clicked")){
+        searchForm.classList.remove("hide");
+        dropIcon.classList.remove("fa-caret-square-down");
+        dropIcon.classList.add("fa-caret-square-up", "clicked");}
+        else {hideForm();}
+    });
+    
+    searchForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        newCity = searchCity.value;
+        newCountry = searchCountry.value;   
+        await setWeather();
+        await setCityCountry();
+        hideForm();
+    });
+
+async function setCityCountry(){
+    let ccapi = "https://restcountries.eu/rest/v2/alpha/";
+    await fetch(ccapi + newCountry.toLowerCase())
+    .then(response => response.json())
+    .then(function(json) {
+        citySpan.innerText = currentCity;
+        countrySpan.innerText = json.name;        
+    })
+    .catch(err => {console.log('Request Failed', err)})
+}
+    
