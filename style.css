@@ -41,7 +41,6 @@ footer {
     font-weight: 300;
 }
 
-
 a {
     color: hsl(53, 50%, 85%);
     text-decoration: none;
@@ -197,6 +196,19 @@ input:first-of-type {width: 90px; margin-left: 10px;}
 }
 
 #searchbtn:hover {background-color: hsl(46, 80%, 57%);}
+
+#errorMsg {
+    text-align: right;
+    color: hsl(0, 80%, 50%);
+    margin-bottom: 10px;
+}
+
+#exit {
+    text-decoration: underline;
+    color: hsl(0, 80%, 50%);
+}
+
+#exit:hover {font-size: 1.2em;}
 
 
 /* Icon colors */

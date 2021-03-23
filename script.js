@@ -11,6 +11,8 @@ const dropIcon = document.querySelector("#dropIcon");
 const searchForm = document.querySelector("#searchform");
 const searchCity = document.querySelector("#findCity");
 const searchCountry = document.querySelector("#findCountry");
+const errorMsg = document.querySelector("#errorMsg");
+const exit = document.querySelector("#exit");
 const apiID = "&appid=64b24d6f700e91128f18e56fa42c624c";
 const allTemperatures = [];
 const allTextsForIcons = [];
@@ -128,8 +130,12 @@ async function getCountryName() {
 async function showCountryName() {
     try {await getCountryName()}
     catch {e => console.error(e)}
-    citySpan.innerText = currentCity;
-    countrySpan.innerText = currentCountry;
+    if ((currentCity !== undefined) && (currentCountry !== undefined)){
+        citySpan.innerText = currentCity;
+        countrySpan.innerText = currentCountry;
+        hide(searchForm); 
+    }
+    else {show(errorMsg)};    
 };
 
 function showForecastTexts() {
@@ -179,7 +185,7 @@ async function showForecast() {
         await showCountryName();
         showForecastTexts();
         showIcons();
-        showTemperatures();        
+        showTemperatures();       
     }
     catch {e => console.error(e);}
 };
@@ -189,32 +195,51 @@ async function showForecast() {
 // *** Choose another city ***
 
 // Show or hide form
+
+function hide(object) {
+    if (!object.classList.contains("hide")){
+        object.classList.add("hide");
+    };
+    if (object === searchForm) {
+        dropIcon.classList.remove("fa-caret-square-up", "clicked");
+        dropIcon.classList.add("fa-caret-square-down");  
+    };
+};
+
+function show(object) {
+    if (object.classList.contains("hide")){
+        object.classList.remove("hide");
+    };
+    if (object === searchForm) {
+        dropIcon.classList.remove("fa-caret-square-down");
+        dropIcon.classList.add("fa-caret-square-up", "clicked");  
+    };
+};
+
 dropIcon.addEventListener("click", () => {
     if (!dropIcon.classList.contains("clicked")){
-        searchForm.classList.remove("hide");
-        dropIcon.classList.remove("fa-caret-square-down");
-        dropIcon.classList.add("fa-caret-square-up", "clicked");
+        show(searchForm);        
     }
-    else {hideForm()}    
+    else {
+        hide(searchForm);
+        hide(errorMsg);        
+    };    
 });
-
-function hideForm() {
-    searchForm.classList.add("hide");
-    dropIcon.classList.remove("fa-caret-square-up", "clicked");
-    dropIcon.classList.add("fa-caret-square-down");
-};
 
 // Show forecast on form submit
 searchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    hide(errorMsg);
     newCity = searchCity.value;
     newCountry = searchCountry.value;
     try {
-        await showForecast();
-        hideForm(); 
+        await showForecast();         
     }   
     catch {e => console.error(e)}
 });
 
-
+exit.addEventListener("click", () => {
+    hide(searchForm);
+    hide(errorMsg);
+});
     
