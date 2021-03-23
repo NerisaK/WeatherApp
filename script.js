@@ -238,7 +238,8 @@ searchForm.addEventListener("submit", async (e) => {
     catch {e => console.error(e)}
 });
 
-exit.addEventListener("click", () => {
+exit.addEventListener("click", (e) => {
+    e.preventDefault();
     hide(searchForm);
     hide(errorMsg);
 });
